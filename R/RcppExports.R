@@ -2,7 +2,9 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' Obtains likelihood
+#'
 #' Calculates likelihood from observed outcome data and given covariate data/parameters.
+#'
 #' @param Y Binary outcome vector.
 #' @param X Matrix of covariates.
 #' @param beta0 Intercept parameter.
@@ -12,5 +14,36 @@
 #' @export
 LIKE <- function(Y, X, beta0, beta) {
     .Call('_VARSELECTEXPOSURE_LIKE', PACKAGE = 'VARSELECTEXPOSURE', Y, X, beta0, beta)
+}
+
+Sample2 <- function(groupprob) {
+    .Call('_VARSELECTEXPOSURE_Sample2', PACKAGE = 'VARSELECTEXPOSURE', groupprob)
+}
+
+Sample1 <- function(G) {
+    .Call('_VARSELECTEXPOSURE_Sample1', PACKAGE = 'VARSELECTEXPOSURE', G)
+}
+
+GET_EFFECT2 <- function(B0, BE, BETA, X) {
+    .Call('_VARSELECTEXPOSURE_GET_EFFECT2', PACKAGE = 'VARSELECTEXPOSURE', B0, BE, BETA, X)
+}
+
+#' Obtains posterior samples from an MCMC algorithm to perform variable selection.
+#'
+#' Performs posterior sampling from an MCMC algorithm to estimate average treatment effect and posterior probability of
+#' inclusion of candidate variables.
+#'
+#' @param Y Binary outcome vector.
+#' @param Z Matrix of covariates including binary exposure variable.
+#' @param PIN Prior probability of inclusion of candidate variables.
+#' @param MAX_COV Maximum number of covariates in desired model.
+#' @param SdBeta Prior standard deviation for generating distrubtion of proposal coefficients.
+#' @param NUM_REPS Number of MCMC iterations to perform.
+#' @return Posterior distributions of the estimated average treatment effect, the estimates of the coefficients, and
+#'         their posterior probability of inclusion.
+#' @useDynLib VARSELECTEXPOSURE
+#' @export
+MCMC_LOGIT_KEEP <- function(Y, Z, PIN, MAX_COV, SdBeta, NUM_REPS) {
+    .Call('_VARSELECTEXPOSURE_MCMC_LOGIT_KEEP', PACKAGE = 'VARSELECTEXPOSURE', Y, Z, PIN, MAX_COV, SdBeta, NUM_REPS)
 }
 

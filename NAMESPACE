@@ -3,6 +3,7 @@
 export(BACKWARD_EXPOSURE)
 export(FORWARD_EXPOSURE)
 export(LIKE)
+export(MCMC_LOGIT_KEEP)
 export(STEPWISE_EXPOSURE)
 importFrom(stats,glm)
 importFrom(stats,pchisq)

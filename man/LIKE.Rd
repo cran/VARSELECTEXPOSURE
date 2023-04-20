@@ -2,8 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{LIKE}
 \alias{LIKE}
-\title{Obtains likelihood
-Calculates likelihood from observed outcome data and given covariate data/parameters.}
+\title{Obtains likelihood}
 \usage{
 LIKE(Y, X, beta0, beta)
 }
@@ -20,6 +19,5 @@ LIKE(Y, X, beta0, beta)
 Likelihood
 }
 \description{
-Obtains likelihood
 Calculates likelihood from observed outcome data and given covariate data/parameters.
 }

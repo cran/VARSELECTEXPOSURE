@@ -8,8 +8,8 @@
 #' @references
 #' [1] **will contain our paper later**
 #' @examples
-#' ###Generate data with n rows and p covariates, can be any number but we'll choose 1000 rows
-#' ###and 10 covariates for this example
+#' ###Generate data with n rows and p covariates, can be any number but we'll choose 750 rows
+#' ###and 7 covariates for this example
 #' set.seed(3)
 #'
 #' p = 7
@@ -71,7 +71,7 @@
 #' FORWARD_EXPOSURE(testdata)
 #' @export
 FORWARD_EXPOSURE = function(Data){
-  p = ncol(Data) - 2
+  p = ncol(Data)-2
   n = nrow(Data)
   DEV.MOD = glm(Y~1+E, data = Data, family = "binomial")
   D0 = DEV.MOD$deviance
@@ -83,7 +83,11 @@ FORWARD_EXPOSURE = function(Data){
     for(VAR in VAR.INDEX){
       test.data = cbind(FORWARD.DATA, Data[,VAR+2])
       test.mod = glm(Y~., data = test.data, family = "binomial")
-      DEVS = append(DEVS, test.mod$deviance)
+      if(TRUE %in% is.na(test.mod$coefficients)){
+        DEVS = append(DEVS, 1000000)
+      }else{
+        DEVS = append(DEVS, test.mod$deviance)
+      }
     }
     new.index = VAR.INDEX[which.min(DEVS)]
     D1 = min(DEVS)
@@ -91,7 +95,7 @@ FORWARD_EXPOSURE = function(Data){
     pval = 1-pchisq(TEST, 1)
     if(pval < 0.05){
       FORWARD.DATA = cbind(FORWARD.DATA, Data[,(new.index+2)])
-      colnames(FORWARD.DATA)[VAR.NUM] = names(Data)[VAR.NUM]
+      colnames(FORWARD.DATA)[VAR.NUM] = names(Data)[new.index+2]
       VAR.NUM = VAR.NUM + 1
       D0 = D1
       VAR.INDEX = VAR.INDEX[-which.min(DEVS)]
@@ -101,23 +105,54 @@ FORWARD_EXPOSURE = function(Data){
     }
   }
   MOD.LENGTH = length(colnames(FORWARD.DATA))
-  LOGIT.MOD = glm(Y~., data = FORWARD.DATA, family = "binomial")
-  BETA.EST = LOGIT.MOD$coefficients
-  pi0.E = c()
-  pi1.E = c()
-  for(j in 1:n){
-    p.event = as.numeric(BETA.EST[1] + BETA.EST[2] + sum(BETA.EST[3:MOD.LENGTH]*FORWARD.DATA[j,3:MOD.LENGTH]))
-    p.noevent = as.numeric(BETA.EST[1] + sum(BETA.EST[3:MOD.LENGTH]*FORWARD.DATA[j,3:MOD.LENGTH]))
-    pi0 = exp(p.noevent)/(1+exp(p.noevent))
-    pi1 = exp(p.event)/(1+exp(p.event))
-    pi0.E[j] = pi0
-    pi1.E[j] = pi1
+  if(MOD.LENGTH == 2){
+    LOGIT.MOD = glm(Y~., data = FORWARD.DATA, family = "binomial")
+    BETA.EST = LOGIT.MOD$coefficients
+    pi0.E = c()
+    pi1.E = c()
+    for(j in 1:n){
+      p.event = as.numeric(BETA.EST[1] + BETA.EST[2])
+      p.noevent = as.numeric(BETA.EST[1])
+      pi0 = exp(p.noevent)/(1+exp(p.noevent))
+      pi1 = exp(p.event)/(1+exp(p.event))
+      if(p.event > 100){
+        pi1 = 1
+      }
+      if(p.noevent > 100){
+        pi0 = 1
+      }
+      pi0.E[j] = pi0
+      pi1.E[j] = pi1
+    }
+    RESULT = vector(mode = "list")
+    RESULT$ATE = sum(pi1.E - pi0.E)/n
+    RESULT$DATA = head(FORWARD.DATA)
+    RESULT$MOD = summary(LOGIT.MOD)
+    return(RESULT)
+  }else{
+    LOGIT.MOD = glm(Y~., data = FORWARD.DATA, family = "binomial")
+    BETA.EST = LOGIT.MOD$coefficients
+    pi0.E = c()
+    pi1.E = c()
+    for(j in 1:n){
+      p.event = as.numeric(BETA.EST[1] + BETA.EST[2] + sum(BETA.EST[3:MOD.LENGTH]*FORWARD.DATA[j,3:MOD.LENGTH]))
+      p.noevent = as.numeric(BETA.EST[1] + sum(BETA.EST[3:MOD.LENGTH]*FORWARD.DATA[j,3:MOD.LENGTH]))
+      pi0 = exp(p.noevent)/(1+exp(p.noevent))
+      pi1 = exp(p.event)/(1+exp(p.event))
+      if(p.event > 100){
+        pi1 = 1
+      }
+      if(p.noevent > 100){
+        pi0 = 1
+      }
+      pi0.E[j] = pi0
+      pi1.E[j] = pi1
+    }
+    RESULT = vector(mode = "list")
+    RESULT$ATE = sum(pi1.E - pi0.E)/n
+    RESULT$DATA = head(FORWARD.DATA)
+    RESULT$MOD = summary(LOGIT.MOD)
+    return(RESULT)
   }
-  RESULT = vector(mode = "list")
-  RESULT$ATE = sum(pi1.E - pi0.E)/n
-  RESULT$RTE = sum(pi1.E/pi0.E)/n
-  RESULT$DATA = head(FORWARD.DATA)
-  RESULT$MOD = summary(LOGIT.MOD)
-  return(RESULT)
 }
 

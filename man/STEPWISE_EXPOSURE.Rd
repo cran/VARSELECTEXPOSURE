@@ -78,3 +78,6 @@ testdata = data[,-c(3,4)]
 
 STEPWISE_EXPOSURE(testdata)
 }
+\references{
+[1] **will contain our paper later**
+}
