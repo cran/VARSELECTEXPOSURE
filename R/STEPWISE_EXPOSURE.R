@@ -4,7 +4,7 @@
 #' @param Data Data frame containing outcome variable (Y), exposure variable (E), and candidate covariates.
 #' @importFrom stats glm pchisq
 #' @importFrom utils head
-#' @return List containing (1) the estimated Average Treatment Effect, (2) estimated Relative Treatment Effect, (3) summary of the selected model, and (4) the first 6 rows of the data frame containing stepwise-selected covariates.
+#' @return List containing (1) the estimated Average Treatment Effect, (2) summary of the selected model, and (3) the first 6 rows of the data frame containing stepwise-selected covariates.
 #' @references
 #' [1] **will contain our paper later**
 #' @examples

@@ -16,8 +16,8 @@ List containing (1) the estimated Average Treatment Effect, (2) estimated Relati
 Returns the estimated Average Treatment Effect and estimated Relative Treatment Effect calculated by the optimal model chosen via backward selection including an exposure variable.
 }
 \examples{
-###Generate data with n rows and p covariates, can be any number but we'll choose 1000 rows
-###and 10 covariates for this example
+###Generate data with n rows and p covariates, can be any number but we'll choose 750 rows
+###and 7 covariates for this example
 set.seed(3)
 
 p = 7

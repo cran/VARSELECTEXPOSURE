@@ -39,8 +39,10 @@ GET_EFFECT2 <- function(B0, BE, BETA, X) {
 #' @param MAX_COV Maximum number of covariates in desired model.
 #' @param SdBeta Prior standard deviation for generating distrubtion of proposal coefficients.
 #' @param NUM_REPS Number of MCMC iterations to perform.
-#' @return Posterior distributions of the estimated average treatment effect, the estimates of the coefficients, and
-#'         their posterior probability of inclusion.
+#' @return List containing (1) the posterior distribution of the estimated Average Treatment Effect, (2) the
+#'         posterior distributions of the intercept parameter, (3) the posterior distributions of the rest of the
+#'         coefficients including the exposure coefficient, and (4) the posterior distribution for the indication
+#'         of whether or not the variable was included in a given iteration's model.
 #' @useDynLib VARSELECTEXPOSURE
 #' @export
 MCMC_LOGIT_KEEP <- function(Y, Z, PIN, MAX_COV, SdBeta, NUM_REPS) {

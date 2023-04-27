@@ -20,8 +20,10 @@ MCMC_LOGIT_KEEP(Y, Z, PIN, MAX_COV, SdBeta, NUM_REPS)
 \item{NUM_REPS}{Number of MCMC iterations to perform.}
 }
 \value{
-Posterior distributions of the estimated average treatment effect, the estimates of the coefficients, and
-        their posterior probability of inclusion.
+List containing (1) the posterior distribution of the estimated Average Treatment Effect, (2) the
+        posterior distributions of the intercept parameter, (3) the posterior distributions of the rest of the
+        coefficients including the exposure coefficient, and (4) the posterior distribution for the indication
+        of whether or not the variable was included in a given iteration's model.
 }
 \description{
 Performs posterior sampling from an MCMC algorithm to estimate average treatment effect and posterior probability of

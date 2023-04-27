@@ -10,14 +10,14 @@ FORWARD_EXPOSURE(Data)
 \item{Data}{Data frame containing outcome variable (Y), exposure variable (E), and candidate covariates.}
 }
 \value{
-List containing (1) the estimated Average Treatment Effect, (2) estimated Relative Treatment Effect, (3) summary of the selected model, and (4) the first 6 rows of the data frame containing forward-selected covariates.
+List containing (1) the estimated Average Treatment Effect, (2) summary of the selected model, and (3) the first 6 rows of the data frame containing forward-selected covariates.
 }
 \description{
 Returns the estimated Average Treatment Effect and estimated Relative Treatment Effect calculated by the optimal model chosen via forward selection including an exposure variable.
 }
 \examples{
-###Generate data with n rows and p covariates, can be any number but we'll choose 1000 rows
-###and 10 covariates for this example
+###Generate data with n rows and p covariates, can be any number but we'll choose 750 rows
+###and 7 covariates for this example
 set.seed(3)
 
 p = 7
